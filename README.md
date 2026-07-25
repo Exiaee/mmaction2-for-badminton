@@ -734,7 +734,66 @@ best_acc_top1_epoch_XX.pth
 
 替換為實際產生的模型檔名。
 
-## 九、TensorBoard
+
+
+## 九、Confusion Matrix
+
+完成模型測試後，可使用 MMAction2 提供的工具產生混淆矩陣（Confusion Matrix），分析各動作類別的分類結果。
+
+### Step 1：輸出模型預測結果
+
+首先使用 `tools/test.py` 將模型預測結果輸出為 `result.pkl`：
+
+```bash
+python tools/test.py ^
+configs/skeleton/stgcnpp/stgcnpp_badminton_3d.py ^
+work_dirs/stgcnpp_badminton_3d_all\best_acc_top1_epoch_18.pth ^
+--dump result.pkl
+```
+
+完成後會產生：
+
+```text
+result.pkl
+```
+
+### Step 2：產生 Confusion Matrix
+
+```bash
+python tools/analysis_tools/confusion_matrix.py ^
+configs/skeleton/stgcnpp/stgcnpp_badminton_3d.py ^
+result.pkl ^
+work_dirs/stgcnpp_badminton_3d_all\confusion_matrix.png
+```
+
+完成後將產生：
+
+```text
+work_dirs/
+└── stgcnpp_badminton_3d_all/
+    └── confusion_matrix.png
+```
+
+### 如何解讀 Confusion Matrix
+
+Confusion Matrix 的列（Rows）代表 **Ground Truth（真實標籤）**，欄（Columns）代表 **Prediction（模型預測）**。
+
+例如：
+
+| Ground Truth \\ Prediction | Forehand | Backhand | Overhead |
+|----------------------------|---------:|---------:|---------:|
+| Forehand                   | 48 | 2 | 0 |
+| Backhand                   | 3 | 45 | 2 |
+| Overhead                   | 0 | 1 | 49 |
+
+說明：
+
+- 主對角線數值越高，表示分類越正確。
+- 非對角線代表誤判，例如 Forehand 被分類成 Backhand。
+- 可藉此分析哪些動作最容易混淆，作為增加資料或改善模型的依據。
+
+
+## 十、TensorBoard
 
 啟動 TensorBoard：
 
@@ -756,7 +815,7 @@ http://localhost:6006
 * Learning Rate
 * Training Epoch
 
-## 十、資料集切分
+## 十一、資料集切分
 
 正式實驗時，`train`、`val` 與 `test` 不可使用相同樣本。
 
@@ -802,7 +861,7 @@ split='val'
 split='test'
 ```
 
-## 注意事項
+## 十二、注意事項
 
 * 多視角攝影機必須完成時間同步。
 * 不同相機的 Pose CSV 必須能依 `frame_id` 對齊。
@@ -814,7 +873,7 @@ split='test'
 * `num_person=1` 代表每個片段只保留一位球員。
 * 修改 MMAction2 原始碼後，建議使用 Editable Install。
 
-## 未來工作
+## 十三、未來工作
 
 後續可擴充：
 
@@ -836,7 +895,7 @@ split='test'
 * MET 能量消耗估測
 * 手腕與手臂動作特徵分析
 
-## 致謝
+## 十四、致謝
 
 本專案基於以下開源專案開發：
 
@@ -845,7 +904,7 @@ split='test'
 * [MMCV](https://github.com/open-mmlab/mmcv)
 * [PyTorch](https://github.com/pytorch/pytorch)
 
-## 授權
+## 十五、授權
 
 本專案主要用於學術研究、羽球動作辨識與運動科學分析。
 
