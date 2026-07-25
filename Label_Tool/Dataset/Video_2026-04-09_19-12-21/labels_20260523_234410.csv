@@ -1,0 +1,7 @@
+sample_id,start_frame,end_frame,label
+s0001,70,183,forehand
+s0002,1070,1236,forehand
+s0003,1361,1449,forehand
+s0004,1544,1646,forehand
+s0005,1717,1816,round-the-head_forehand
+s0006,1971,2059,forehand
