@@ -439,7 +439,7 @@ train_pipeline = [
     dict(type='PreNormalize3D'),
     dict(
         type='GenSkeFeat',
-        dataset='nturgb+d',
+        dataset='coco',
         feats=['j'],
     ),
     dict(
@@ -461,11 +461,38 @@ train_pipeline = [
 feats=['j']
 ```
 
-由於沒有啟用 Bone Feature，`GenSkeFeat` 中的 dataset 參數可先維持現有設定。真正決定 GCN 骨架連接關係的是：
+其中 `j` 代表 Joint Feature，也就是人體關節的三維座標。
+
+由於本專案使用 COCO 17 點人體骨架，因此 `GenSkeFeat` 應設定為：
 
 ```python
-graph_cfg=dict(layout='coco')
+dict(
+    type='GenSkeFeat',
+    dataset='coco',
+    feats=['j'],
+)
 ```
+
+`GenSkeFeat` 的 `dataset` 參數用來指定 Skeleton Feature 所採用的關節格式，而 STGCN++ Backbone 中的 `graph_cfg` 則用來指定關節連接關係與 Graph 鄰接矩陣。
+
+因此兩者都應與 COCO 17 點骨架一致：
+
+```python
+dict(
+    type='GenSkeFeat',
+    dataset='coco',
+    feats=['j'],
+)
+```
+
+```python
+graph_cfg=dict(
+    layout='coco',
+    mode='spatial',
+)
+```
+
+本專案目前只使用 Joint Feature，尚未啟用 Bone Feature。
 
 ## 五、Skeleton Graph Layout
 
