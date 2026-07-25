@@ -454,6 +454,41 @@ train_pipeline = [
     dict(type='PackActionInputs'),
 ]
 ```
+### Clip Sampling
+
+本專案使用 `UniformSampleFrames` 將每個 Skeleton 動作片段取樣為固定長度，作為 STGCN++ 的輸入。
+
+```python
+dict(
+    type='UniformSampleFrames',
+    clip_len=32,
+)
+```
+
+#### 參數說明
+
+| 參數 | 說明 |
+|------|------|
+| `clip_len=32` | 每個樣本輸入固定 **32 個 Skeleton Frames**。若原始片段長度不足，MMAction2 會自動補點或重複取樣；若長度超過 32，則會均勻取樣 (Uniform Sampling)。 |
+| `num_clips=1` | 使用 MMAction2 預設值，每個樣本只取 **一個 Clip** 作為模型輸入。 |
+
+#### STGCN++ Input Shape
+
+本專案每筆資料輸入 STGCN++ 的 Tensor Shape 為：
+
+```text
+(M, T, V, C)
+= (1, 32, 17, 3)
+```
+
+其中：
+
+| 維度 | 說明 |
+|------|------|
+| `M = 1` | Number of Persons |
+| `T = 32` | Skeleton Frames (`clip_len`) |
+| `V = 17` | COCO 人體關節數 |
+| `C = 3` | x、y、z 三維座標 |
 
 目前僅使用 Joint Feature：
 
