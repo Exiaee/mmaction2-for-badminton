@@ -110,6 +110,38 @@ conda create -n mmaction2 python=3.10 -y
 conda activate mmaction2
 ```
 
+### 建議版本 (Version Compatibility)
+
+| 套件 | 建議版本 |
+|------|----------|
+| Python | 3.10 |
+| NumPy | **1.26.4** |
+| PyTorch | 2.x |
+| MMEngine | Latest |
+| MMCV | Compatible with MMAction2 |
+| MMAction2 | 1.x |
+
+安裝 NumPy：
+
+```bash
+pip install numpy==1.26.4
+```
+
+確認版本：
+
+```bash
+python -c "import numpy; print(numpy.__version__)"
+```
+
+若出現：
+
+```text
+Failed to initialize NumPy
+_ARRAY_API not found
+```
+
+通常是 NumPy 2.x 與部分 PyTorch/MMCV 擴充套件的相容性問題，建議使用 **NumPy 1.26.4**。
+
 安裝 PyTorch 後，再安裝 OpenMMLab 相關套件：
 
 ```bash
@@ -128,7 +160,7 @@ pip install -v -e .
 安裝資料處理套件：
 
 ```bash
-pip install numpy pandas opencv-python
+pip install pandas opencv-python
 ```
 
 確認 MMAction2 安裝位置：
