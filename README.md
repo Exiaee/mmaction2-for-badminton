@@ -635,7 +635,90 @@ python tools/train.py `
     --work-dir work_dirs/stgcnpp_badminton_3d_all
 ```
 
-## 七、模型測試
+
+
+## 七、Training Logs
+
+MMAction2 會將訓練結果儲存在 `work_dir`。
+
+若未指定 `--work-dir`，預設會建立於：
+
+```text
+mmaction2/
+└── work_dirs/
+    └── stgcnpp_badminton_3d/
+```
+
+若指定：
+
+```bash
+python tools/train.py ^
+configs/skeleton/stgcnpp/stgcnpp_badminton_3d.py ^
+--work-dir work_dirs/stgcnpp_badminton_3d_all
+```
+
+則所有訓練結果都會儲存在：
+
+```text
+work_dirs/
+└── stgcnpp_badminton_3d_all/
+```
+
+### 訓練輸出內容
+
+```text
+work_dirs/
+└── stgcnpp_badminton_3d_all/
+    ├── 20260726_143215.log
+    ├── 20260726_143215.json
+    ├── best_acc_top1_epoch_18.pth
+    ├── epoch_1.pth
+    ├── epoch_2.pth
+    ├── ...
+    ├── last_checkpoint
+    └── vis_data/
+        ├── events.out.tfevents.xxxxxxxxx
+        └── config.py
+```
+
+### 檔案說明
+
+| 檔案 | 說明 |
+|------|------|
+| `*.log` | 訓練過程文字紀錄。 |
+| `*.json` | 每個 Epoch 的 Loss、Accuracy 等訓練資訊。 |
+| `best_acc_top1_epoch_xx.pth` | Top-1 Accuracy 最佳模型。 |
+| `epoch_xx.pth` | 每個 Epoch 儲存的 Checkpoint。 |
+| `last_checkpoint` | 最近一次訓練的 Checkpoint。 |
+| `vis_data/` | TensorBoard 所需的 Log 檔案。 |
+
+### 如何確認 Log 儲存位置
+
+訓練開始後，Terminal 通常會顯示：
+
+```text
+Logs will be saved to
+work_dirs/stgcnpp_badminton_3d_all
+```
+
+若忘記 `work_dir`，可查看：
+
+**Windows**
+
+```bat
+dir work_dirs
+```
+
+**Linux / macOS**
+
+```bash
+ls work_dirs
+```
+
+通常最新建立的資料夾就是本次訓練的輸出目錄。
+
+
+## 八、模型測試
 
 ```bat
 python tools/test.py ^
@@ -651,7 +734,7 @@ best_acc_top1_epoch_XX.pth
 
 替換為實際產生的模型檔名。
 
-## 八、TensorBoard
+## 九、TensorBoard
 
 啟動 TensorBoard：
 
@@ -673,7 +756,7 @@ http://localhost:6006
 * Learning Rate
 * Training Epoch
 
-## 重要：資料集切分
+## 十、資料集切分
 
 正式實驗時，`train`、`val` 與 `test` 不可使用相同樣本。
 
