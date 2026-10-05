@@ -542,49 +542,70 @@ Knee movement
 
 # 14. Temporal Downsampling
 
-Backbone 具有：
+除了增加 **Feature Channels** 之外，ST-GCN++ 也會在特定 Stage 對 **Temporal Dimension** 進行 Downsampling。
 
-``` python
+Backbone 設定：
+
+```python
 down_stages = [5, 8]
 ```
 
-對應 stage：
+在建立各個 `STGCNBlock` 時：
 
-``` python
+```python
 stride = 1 + (i in down_stages)
 ```
 
-如果 stage 位於 `down_stages`：
+當目前 Stage 位於 `down_stages` 時：
 
-``` text
+```text
 stride = 2
 ```
 
-Temporal dimension 因此下降。
+表示該 `STGCNBlock` 會沿著 **Temporal Dimension（時間維度）** 進行 Downsampling，使 Frame 數量約縮小為原本的一半。
 
 例如：
 
-``` text
+```text
+Temporal Dimension
+
 150 Frames
-   ↓
-75 Frames
-   ↓
-38 Frames
+    ↓  stride = 2
+ 75 Frames
+    ↓  stride = 2
+ 38 Frames
 ```
 
-同時 feature channel 增加：
+Temporal Downsampling 通常會與 **Feature Channel 增加**搭配：
 
-``` text
+```text
+Temporal Dimension ↓     Feature Channels ↑
+
 150 × 64
     ↓
-75 × 128
+ 75 × 128
     ↓
-38 × 256
+ 38 × 256
 ```
 
-概念與 CNN 的 spatial downsampling 類似，只是這裡主要壓縮的是 **Time
-dimension**。
+因此，隨著網路層數加深：
 
+- **Temporal Dimension 減少**：降低後續運算量，並逐步整合較長時間範圍的動作資訊。
+- **Feature Channels 增加**：提高模型的特徵表示能力，使後段網路能表示更複雜的時空動作特徵。
+
+可以將這個過程類比為 CNN 的 Spatial Downsampling：
+
+```text
+CNN
+Spatial Size ↓
+Feature Channels ↑
+
+ST-GCN++
+Temporal Dimension ↓
+Feature Channels ↑
+```
+
+> **簡單來說，ST-GCN++ 透過降低時間維度並增加 Feature Channels，逐步將原始 Skeleton Sequence 轉換成更高階的時空動作特徵。**
 ------------------------------------------------------------------------
 
 # 15. Backbone 最後輸出什麼？
