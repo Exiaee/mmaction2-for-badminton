@@ -490,6 +490,8 @@ Output Feature
 
 # 13. Channel 為什麼從 64 → 128 → 256？
 
+隨著網路層數加深，**Temporal Dimension** 透過 **Downsampling** 逐漸縮小，同時增加 **Feature Channels**，使後段網路具有更高的特徵表示能力，以學習更複雜的 **Skeleton 時空動作特徵**。
+
 Backbone 有：
 
 ``` python
